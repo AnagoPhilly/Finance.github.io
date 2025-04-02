@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Future Potential</title>
+    <link rel="icon" type="image/png" href="favicon.png">
+    <style>
+        /* Existing styles unchanged, with additions */
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'San Francisco', 'Segoe UI', Roboto, sans-serif;
+            background-color: #f5f5f7;
+            margin: 0;
+            padding: 20px;
+            color: #1d1d1f;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 18px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 20px;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #e8e8ed;
+        }
+        .logo img {
+            max-width: 150px;
+            height: auto;
+            filter: brightness(1.1);
+        }
+        h1 {
+            font-size: 28px;
+            font-weight: 600;
+            color: #1d1d1f;
+            margin: 0;
+        }
+        .charts {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+        }
+        .chart-container {
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 16px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .chart-container:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+        }
+        .chart-container h2 {
+            font-size: 20px;
+            font-weight: 500;
+            color: #1d1d1f;
+            margin: 0 0 15px 0;
+        }
+        canvas {
+            width: 100% !important;
+            height: auto !important;
+            border-radius: 12px;
+        }
+        button {
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #007aff, #005bb5);
+            color: #ffffff;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 500;
+            transition: background 0.3s ease, transform 0.2s ease;
+            margin-top: 30px;
+            display: block;
+            margin-left: auto;
+        }
+        button:hover {
+            background: linear-gradient(135deg, #005bb5, #003087);
+            transform: translateY(-1px);
+        }
+        button:active {
+            transform: translateY(1px);
+        }
+        .error-message {
+            color: #ff3b30;
+            font-size: 16px;
+            text-align: center;
+            margin: 20px 0;
+        }
+        /* New styles for summary section */
+        .summary-section {
+            background-color: #fafafa;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+        .summary-section h2 {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1d1d1f;
+            margin: 0 0 15px 0;
+        }
+        .summary-table {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            width: 100%;
+        }
+        .summary-item {
+            background-color: #ffffff;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.03);
+        }
+        .summary-item label {
+            font-size: 14px;
+            font-weight: 500;
+            color: #6e6e73;
+            display: block;
+            margin-bottom: 5px;
+        }
+        .summary-item span {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1d1d1f;
+        }
+
+        @media screen and (min-width: 768px) {
+            .container { padding: 40px; }
+            h1 { font-size: 32px; }
+            .logo img { max-width: 180px; }
+            .chart-container { padding: 25px; }
+            .summary-section { padding: 25px; }
+            .summary-item { padding: 20px; }
+            .summary-item span { font-size: 20px; }
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">
+                <img src="https://cdn-ilafcfb.nitrocdn.com/KEhcwwSaSxLtwUeasrlkkKIKKhAgEOob/assets/images/optimized/rev-16fc74f/anagocleaning.com/wp-content/uploads/2023/09/anagologo2-300x181.png" alt="Anago Cleaning Systems Logo">
+            </div>
+            <h1>Future Potential (Next Year Forecast)</h1>
+        </header>
+        <!-- New Summary Section -->
+        <div class="summary-section">
+            <h2>Estimated Totals for 2025</h2>
+            <div class="summary-table">
+                <div class="summary-item">
+                    <label>Estimated Total Revenue</label>
+                    <span id="total-revenue">$0.00</span>
+                </div>
+                <div class="summary-item">
+                    <label>Estimated Total Expenses</label>
+                    <span id="total-expenses">$0.00</span>
+                </div>
+                <div class="summary-item">
+                    <label>Estimated Avg. Monthly Profit</label>
+                    <span id="avg-profit">$0.00</span>
+                </div>
+            </div>
+        </div>
+        <div class="charts" id="charts">
+            <div class="chart-container">
+                <h2>Projected Trends</h2>
+                <canvas id="trendChart"></canvas>
+            </div>
+            <div class="chart-container">
+                <h2>Projected Distribution</h2>
+                <canvas id="pieChart"></canvas>
+            </div>
+        </div>
+        <div id="error-message" class="error-message"></div>
+        <button onclick="window.print()">Print Forecast</button>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            const errorMessageDiv = document.getElementById('error-message');
+            const urlParams = new URLSearchParams(window.location.search);
+            const encodedData = urlParams.get('data');
+            let data = [];
+
+            try {
+                if (encodedData) {
+                    data = JSON.parse(decodeURIComponent(encodedData));
+                    console.log("Parsed Data:", data);
+                } else {
+                    throw new Error("No data provided in URL");
+                }
+            } catch (e) {
+                console.error("Data Parsing Error:", e.message);
+                errorMessageDiv.textContent = "Error: Unable to load data. Please provide valid data in the URL.";
+                data = [];
+            }
+
+            const labels = data.length ? data.map(item => item.label || "Unknown") : ["No Data"];
+            const profits = data.length ? data.map(item => Number(item.profit) || 0) : [0];
+            const labors = data.length ? data.map(item => Number(item.labor) || 0) : [0];
+            const expenses = data.length ? data.map(item => Number(item.expenses) || 0) : [0];
+
+            console.log("Processed Data:", { labels, profits, labors, expenses });
+
+            const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+            const lastYear = data.length ? parseInt(labels[labels.length - 1].split(' ')[1]) || new Date().getFullYear() : new Date().getFullYear();
+            const nextYear = lastYear + 1;
+            const forecastLabels = months.map(month => `${month} ${nextYear}`);
+
+            function extrapolate(dataArray, forecastLength = 12) {
+                if (dataArray.length < 2) return Array(forecastLength).fill(dataArray.length ? dataArray[0] : 0);
+                const n = dataArray.length;
+                const x = Array.from({ length: n }, (_, i) => i);
+                const sumX = x.reduce((sum, xi) => sum + xi, 0);
+                const sumY = dataArray.reduce((sum, yi) => sum + yi, 0);
+                const sumXY = x.reduce((sum, xi, i) => sum + xi * dataArray[i], 0);
+                const sumXX = x.reduce((sum, xi) => sum + xi * xi, 0);
+                const slope = (n * sumXY - sumX * sumY) / (n * sumXX - sumX * sumX) || 0;
+                const intercept = (sumY - slope * sumX) / n || 0;
+                return Array.from({ length: forecastLength }, (_, i) => Math.max(0, slope * (n + i) + intercept));
+            }
+
+            async function predictWithLSTM(dataArray, sequenceLength = 6, forecastLength = 12) {
+                console.log("LSTM Input:", dataArray);
+                if (dataArray.length < sequenceLength) {
+                    console.warn(`Data length (${dataArray.length}) < sequenceLength (${sequenceLength}); using extrapolation`);
+                    return extrapolate(dataArray, forecastLength);
+                }
+
+                try {
+                    const maxVal = Math.max(...dataArray, 1);
+                    const minVal = Math.min(...dataArray);
+                    const normalizedData = dataArray.map(val => (val - minVal) / (maxVal - minVal) || 0);
+
+                    const sequences = [];
+                    const targets = [];
+                    for (let i = 0; i < normalizedData.length - sequenceLength; i++) {
+                        sequences.push(normalizedData.slice(i, i + sequenceLength));
+                        targets.push(normalizedData[i + sequenceLength]);
+                    }
+
+                    if (sequences.length === 0) {
+                        console.warn("No sequences generated; using extrapolation");
+                        return extrapolate(dataArray, forecastLength);
+                    }
+
+                    console.log("Sequences:", sequences, "Targets:", targets);
+
+                    const xs = tf.tensor3d(sequences, [sequences.length, sequenceLength, 1]);
+                    const ys = tf.tensor2d(targets, [targets.length, 1]);
+
+                    const model = tf.sequential();
+                    model.add(tf.layers.lstm({ units: 10, inputShape: [sequenceLength, 1], returnSequences: false }));
+                    model.add(tf.layers.dense({ units: 1 }));
+                    model.compile({ optimizer: 'adam', loss: 'meanSquaredError' });
+                    await model.fit(xs, ys, { epochs: 50, batchSize: 4, verbose: 0 });
+                    console.log("LSTM Model Trained");
+
+                    let lastSequence = normalizedData.slice(-sequenceLength);
+                    const predictions = [];
+                    for (let i = 0; i < forecastLength; i++) {
+                        const inputTensor = tf.tensor3d([lastSequence], [1, sequenceLength, 1]);
+                        const pred = model.predict(inputTensor);
+                        const predValue = pred.dataSync()[0];
+                        predictions.push(predValue);
+                        lastSequence = [...lastSequence.slice(1), predValue];
+                        inputTensor.dispose();
+                        pred.dispose();
+                    }
+
+                    const denormalizedPredictions = predictions.map(val => Math.max(0, val * (maxVal - minVal) + minVal));
+                    console.log("LSTM Predictions:", denormalizedPredictions);
+                    return denormalizedPredictions;
+                } catch (e) {
+                    console.error("LSTM Error:", e.message);
+                    return extrapolate(dataArray, forecastLength);
+                }
+            }
+
+            let forecastProfits, forecastLabors, forecastExpenses;
+            try {
+                forecastProfits = await predictWithLSTM(profits);
+                forecastLabors = await predictWithLSTM(labors);
+                forecastExpenses = await predictWithLSTM(expenses);
+            } catch (e) {
+                console.error("Forecast Generation Error:", e.message);
+                errorMessageDiv.textContent = "Error generating forecasts; displaying fallback data.";
+                forecastProfits = extrapolate(profits);
+                forecastLabors = extrapolate(labors);
+                forecastExpenses = extrapolate(expenses);
+            }
+
+            console.log("Final Forecasts:", { forecastProfits, forecastLabors, forecastExpenses });
+
+            const totalForecastProfit = forecastProfits.reduce((sum, val) => sum + val, 0);
+            const totalForecastLabor = forecastLabors.reduce((sum, val) => sum + val, 0);
+            const totalForecastExpenses = forecastExpenses.reduce((sum, val) => sum + val, 0);
+            const totalRevenue = totalForecastProfit + totalForecastLabor; // Revenue = Profit + Labor (assuming labor is part of revenue)
+            const avgMonthlyProfit = totalForecastProfit / 12;
+
+            // Update summary section
+            document.getElementById('total-revenue').textContent = `$${totalRevenue.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+            document.getElementById('total-expenses').textContent = `$${totalForecastExpenses.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+            document.getElementById('avg-profit').textContent = `$${avgMonthlyProfit.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+
+            const colors = {
+                profit: '#34c759',
+                labor: '#ff9500',
+                expenses: '#007aff'
+            };
+
+            try {
+                const trendCtx = document.getElementById('trendChart').getContext('2d');
+                new Chart(trendCtx, {
+                    type: 'line',
+                    data: {
+                        labels: forecastLabels,
+                        datasets: [
+                            { label: 'Profit', data: forecastProfits, borderColor: colors.profit, backgroundColor: 'rgba(52, 199, 89, 0.1)', fill: true, tension: 0.4, pointRadius: 4, pointHoverRadius: 6, borderWidth: 2 },
+                            { label: 'Labor', data: forecastLabors, borderColor: colors.labor, backgroundColor: 'rgba(255, 149, 0, 0.1)', fill: true, tension: 0.4, pointRadius: 4, pointHoverRadius: 6, borderWidth: 2 },
+                            { label: 'Expenses', data: forecastExpenses, borderColor: colors.expenses, backgroundColor: 'rgba(0, 122, 255, 0.1)', fill: true, tension: 0.4, pointRadius: 4, pointHoverRadius: 6, borderWidth: 2 }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        scales: {
+                            y: { beginAtZero: true, grid: { color: 'rgba(0, 0, 0, 0.05)' }, ticks: { font: { size: 12, weight: '500' }, color: '#6e6e73' }, title: { display: true, text: 'Amount ($)', font: { size: 14, weight: '600' }, color: '#1d1d1f' } },
+                            x: { grid: { display: false }, ticks: { font: { size: 12, weight: '500' }, color: '#6e6e73', maxRotation: 45, minRotation: 45 }, title: { display: true, text: 'Month/Year', font: { size: 14, weight: '600' }, color: '#1d1d1f' } }
+                        },
+                        plugins: {
+                            legend: { position: 'top', labels: { font: { size: 14, weight: '500' }, color: '#1d1d1f', padding: 15, usePointStyle: true, pointStyle: 'circle' } },
+                            title: { display: true, text: `Projected Trends for ${nextYear} (LSTM)`, font: { size: 18, weight: '600' }, color: '#1d1d1f', padding: { top: 10, bottom: 20 } },
+                            tooltip: { backgroundColor: 'rgba(29, 29, 31, 0.9)', titleFont: { size: 14, weight: '600' }, bodyFont: { size: 12, weight: '400' }, padding: 10, cornerRadius: 8, displayColors: true, boxPadding: 5 }
+                        },
+                        animation: { duration: 1000, easing: 'easeOutQuart' }
+                    }
+                });
+
+                const pieCtx = document.getElementById('pieChart').getContext('2d');
+                new Chart(pieCtx, {
+                    type: 'pie',
+                    data: {
+                        labels: ['Profit', 'Labor', 'Expenses'],
+                        datasets: [{ data: [totalForecastProfit, totalForecastLabor, totalForecastExpenses], backgroundColor: [colors.profit, colors.labor, colors.expenses], borderColor: '#ffffff', borderWidth: 2, hoverOffset: 8 }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            legend: { position: 'top', labels: { font: { size: 14, weight: '500' }, color: '#1d1d1f', padding: 15, usePointStyle: true, pointStyle: 'circle' } },
+                            title: { display: true, text: `Projected Distribution for ${nextYear}`, font: { size: 18, weight: '600' }, color: '#1d1d1f', padding: { top: 10, bottom: 20 } },
+                            tooltip: { backgroundColor: 'rgba(29, 29, 31, 0.9)', titleFont: { size: 14, weight: '600' }, bodyFont: { size: 12, weight: '400' }, padding: 10, cornerRadius: 8, displayColors: true, boxPadding: 5 }
+                        },
+                        animation: { duration: 1000, easing: 'easeOutQuart' }
+                    }
+                });
+            } catch (e) {
+                console.error("Chart Rendering Error:", e.message);
+                errorMessageDiv.textContent = "Error rendering charts: " + e.message;
+            }
+        });
+    </script>
+</body>
+</html>
