@@ -6,7 +6,6 @@
     <title>Anago Philly Finance Tools</title>
     <link rel="icon" type="image/png" href="favicon.png">
     <style>
-        /* All existing styles remain unchanged */
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: #dadada;
@@ -236,6 +235,7 @@
             gap: 10px;
             align-items: center;
             margin-bottom: 20px;
+            flex-wrap: wrap;
         }
         .year-buttons {
             display: flex;
@@ -249,9 +249,6 @@
             color: white;
             border: none;
             border-radius: 5px;
-            cursor: pointer;
-            font-size: 16px;
-            transition: background-color 0.3s ease;
         }
         .year-btn:hover { background-color: #2980b9; }
         .year-btn.active { background-color: #2c3e50; }
@@ -486,7 +483,7 @@
                     <div class="year-selector">
                         <div>
                             <label for="start-year">Start Year:</label>
-                            <input type="number" id="start-year" value="2025" min="1900" max="2100">
+                            <input type="number" id="start-year" value="2024" min="1900" max="2100">
                         </div>
                         <div>
                             <label for="end-year">End Year:</label>
@@ -496,7 +493,9 @@
                         <button id="analysis-report-btn">Analysis Report</button>
                         <input type="file" id="import-excel" accept=".xlsx, .xls" style="display: none;">
                         <button id="import-btn">Import Excel</button>
+                        <button id="paste-data-btn">Paste Data</button>
                     </div>
+                    <textarea id="paste-data-input" rows="4" cols="50" placeholder="Paste Excel data here (e.g., MM-DD-YY<tab>Amount)" style="display: none; margin-top: 10px;"></textarea>
                     <div id="year-buttons" class="year-buttons"></div>
                     <div id="months-container"></div>
                 </section>
@@ -537,6 +536,8 @@
             const monthsContainer = document.getElementById('months-container');
             const importBtn = document.getElementById('import-btn');
             const importExcelInput = document.getElementById('import-excel');
+            const pasteDataBtn = document.getElementById('paste-data-btn');
+            const pasteDataInput = document.getElementById('paste-data-input');
 
             // Navigation
             cfeeBtn.addEventListener('click', () => toggleSection(cfeeContent));
@@ -558,7 +559,7 @@
 
             let accCount = 1;
 
-            function toggleAccordion(e) {
+            function toggleAccordion() {
                 this.classList.toggle('active');
                 const panel = this.nextElementSibling;
                 if (panel.style.maxHeight) {
@@ -578,7 +579,7 @@
                 });
             }
 
-            // P&L Setup (unchanged)
+            // P&L Setup
             document.querySelectorAll('#accounts-container .accordion').forEach(acc => {
                 acc.addEventListener('click', toggleAccordion);
             });
@@ -613,7 +614,7 @@
                 `;
                 document.getElementById('accounts-container').appendChild(newAcc);
                 document.getElementById('accounts-container').appendChild(newPanel);
-                
+
                 newAcc.addEventListener('click', toggleAccordion);
                 newPanel.querySelector('.account-name-input').addEventListener('input', function() {
                     newAcc.querySelector('.accordion-title').textContent = this.value || `Account ${accCount}`;
@@ -672,6 +673,7 @@
                         });
                     });
                 });
+                console.log(`Generated tabs for ${year}:`, revenueData);
             }
 
             function generateYearButtons(startYear, endYear) {
@@ -736,37 +738,167 @@
                     const reader = new FileReader();
                     reader.onload = function(e) {
                         const data = new Uint8Array(e.target.result);
-                        const workbook = XLSX.read(data, { type: 'array' });
+                        const workbook = XLSX.read(data, { type: 'array', dateNF: 'mm/dd/yyyy' });
                         const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
-                        const jsonData = XLSX.utils.sheet_to_json(firstSheet);
+                        const jsonData = XLSX.utils.sheet_to_json(firstSheet, { header: ['Date', 'Amount'], range: 0, raw: false, dateNF: 'mm/dd/yyyy' });
 
-                        jsonData.forEach(row => {
-                            const month = row['Month'];
-                            const year = row['Year'];
-                            const key = `${month} ${year}`;
-                            if (months.includes(month) && year) {
-                                revenueData[key] = {
-                                    profit: parseFloat(row['Profit']) || 0,
-                                    labor: parseFloat(row['Labor']) || 0,
-                                    expenses: parseFloat(row['Expenses']) || 0
-                                };
+                        console.log('Raw JSON data from Excel:', jsonData);
+
+                        const aggregatedData = {};
+                        jsonData.forEach((row, index) => {
+                            if (index === 0) return;
+
+                            let dateStr = row['Date'];
+                            let amount = row['Amount'];
+
+                            if (typeof amount === 'string') {
+                                amount = parseFloat(amount.replace(/,/g, '')) || 0;
+                            } else if (typeof amount !== 'number') {
+                                console.warn(`Invalid amount at row ${index + 1}:`, amount);
+                                amount = 0;
                             }
+
+                            if (typeof dateStr === 'number') {
+                                const date = XLSX.SSF.parse_date_code(dateStr);
+                                if (date) {
+                                    dateStr = `${date.m}/${date.d}/${date.y}`;
+                                } else {
+                                    console.warn(`Invalid date number at row ${index + 1}:`, dateStr);
+                                    return;
+                                }
+                            } else if (typeof dateStr !== 'string') {
+                                console.warn(`Invalid date format at row ${index + 1}:`, dateStr);
+                                return;
+                            }
+
+                            let dateParts = dateStr.includes('/') ? dateStr.split('/') : dateStr.split('-');
+                            const month = parseInt(dateParts[0], 10);
+                            const year = parseInt(dateParts[2], 10);
+                            const fullYear = year < 100 ? 2000 + year : year;
+                            const monthName = months[month - 1];
+
+                            if (!monthName) {
+                                console.warn(`Invalid month at row ${index + 1}:`, month);
+                                return;
+                            }
+
+                            const key = `${monthName} ${fullYear}`;
+                            if (!aggregatedData[key]) {
+                                aggregatedData[key] = { profit: 0, labor: 0, expenses: 0 };
+                            }
+                            aggregatedData[key].profit += amount;
+                        });
+
+                        Object.keys(aggregatedData).forEach(key => {
+                            revenueData[key] = {
+                                profit: aggregatedData[key].profit,
+                                labor: revenueData[key]?.labor || 0,
+                                expenses: revenueData[key]?.expenses || 0
+                            };
                         });
 
                         const activeYearBtn = yearButtonsContainer.querySelector('.year-btn.active');
                         if (activeYearBtn) {
-                            generateMonthTabs(parseInt(activeYearBtn.textContent));
+                            const activeYear = parseInt(activeYearBtn.textContent);
+                            generateMonthTabs(activeYear);
+                        } else {
+                            alert('Please select a year to display the imported data.');
                         }
                     };
                     reader.readAsArrayBuffer(file);
-                    importExcelInput.value = ''; // Reset input to allow re-importing the same file
+                    importExcelInput.value = '';
                 }
             });
 
-            // Initialize with default range
-            generateYearButtons(parseInt(startYearInput.value), parseInt(endYearInput.value));
+            // Paste Data functionality
+            pasteDataBtn.addEventListener('click', () => {
+                if (pasteDataInput.style.display === 'none' || pasteDataInput.style.display === '') {
+                    pasteDataInput.style.display = 'block';
+                    pasteDataBtn.textContent = 'Submit Pasted Data';
+                } else {
+                    const pastedText = pasteDataInput.value.trim();
+                    if (pastedText) {
+                        processPastedData(pastedText);
+                        pasteDataInput.style.display = 'none';
+                        pasteDataBtn.textContent = 'Paste Data';
+                        pasteDataInput.value = '';
+                    } else {
+                        alert('Please paste some data before submitting.');
+                    }
+                }
+            });
 
-            // C-Fee Calculator (unchanged)
+            function processPastedData(text) {
+                console.log('Pasted text:', text);
+                const lines = text.split('\n');
+                const aggregatedData = {};
+
+                lines.forEach((line, index) => {
+                    const trimmedLine = line.trim();
+                    if (!trimmedLine) return;
+
+                    let parts = trimmedLine.split(/\t/); // Assuming tab-separated as per your example
+                    console.log(`Line ${index + 1} parts:`, parts);
+
+                    if (parts.length < 2) {
+                        console.warn(`Invalid data format at line ${index + 1}:`, trimmedLine);
+                        return;
+                    }
+
+                    let [dateStr, amountStr] = parts;
+                    let amount = parseFloat(amountStr.replace(/,/g, '')) || 0;
+
+                    let dateParts = dateStr.split('-');
+                    if (dateParts.length !== 3) {
+                        console.warn(`Invalid date format at line ${index + 1}:`, dateStr);
+                        return;
+                    }
+
+                    const month = parseInt(dateParts[0], 10); // MM
+                    const year = parseInt(dateParts[2], 10);  // YY
+                    const fullYear = year < 100 ? 2000 + year : year; // Convert YY to YYYY
+                    const monthName = months[month - 1];
+
+                    if (!monthName) {
+                        console.warn(`Invalid month at line ${index + 1}:`, month);
+                        return;
+                    }
+
+                    const key = `${monthName} ${fullYear}`;
+                    if (!aggregatedData[key]) {
+                        aggregatedData[key] = { profit: 0, labor: 0, expenses: 0 };
+                    }
+                    aggregatedData[key].profit += amount;
+                    console.log(`Processed ${key}: Profit += ${amount}`);
+                });
+
+                Object.keys(aggregatedData).forEach(key => {
+                    revenueData[key] = {
+                        profit: aggregatedData[key].profit,
+                        labor: revenueData[key]?.labor || 0,
+                        expenses: revenueData[key]?.expenses || 0
+                    };
+                });
+
+                console.log('Updated revenueData:', revenueData);
+
+                const activeYearBtn = yearButtonsContainer.querySelector('.year-btn.active');
+                if (activeYearBtn) {
+                    const activeYear = parseInt(activeYearBtn.textContent);
+                    generateMonthTabs(activeYear);
+                } else {
+                    // Default to the earliest year in the data if no year is selected
+                    const years = Object.keys(revenueData).map(key => parseInt(key.split(' ')[1])).sort();
+                    const defaultYear = years.length ? years[0] : parseInt(startYearInput.value) || 2024;
+                    generateYearButtons(defaultYear, parseInt(endYearInput.value) || defaultYear);
+                    generateMonthTabs(defaultYear);
+                }
+            }
+
+            // Initialize with default range (updated to 2024-2025 to match your data)
+            generateYearButtons(2024, 2025);
+
+            // C-Fee Calculator
             calculateBtn.addEventListener('click', () => {
                 const monthlyAmount = parseFloat(document.getElementById('monthly-amount').value.replace(/,/g, '')) || 0;
                 const cfiFactor = parseFloat(document.getElementById('cfi-factor').value) || 0;
@@ -821,7 +953,7 @@
                 pdf.save('C-Fee_Statement.pdf');
             });
 
-            // P&L and Man Hour Calculators (unchanged)
+            // P&L Calculator
             document.getElementById('pnl-calculate-btn').addEventListener('click', () => {
                 let totalRevenue = 0, totalLabor = 0, totalSupplies = 0, totalOverhead = 0, totalCfees = 0, totalCodbCost = 0;
                 document.querySelectorAll('.pnl-form').forEach(form => {
@@ -867,6 +999,7 @@
                 pdf.save('P&L_Statement.pdf');
             });
 
+            // Man Hour Calculator
             document.getElementById('manhour-calculate-btn').addEventListener('click', () => {
                 const numberOfPeople = parseFloat(document.getElementById('number-of-people').value) || 0;
                 const totalHours = parseFloat(document.getElementById('total-hours').value) || 0;
