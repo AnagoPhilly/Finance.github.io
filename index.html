@@ -3,10 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Anago Philly Finance Tools</title>
+    <title>Anago Philly & South Jersey Finance Tools</title>
     <link rel="icon" type="image/png" href="favicon.png">
     <style>
-        /* Previous CSS remains unchanged */
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: #dadada;
@@ -95,8 +94,8 @@
             font-size: 16px;
         }
         .back-btn:hover { background-color: #c0392b; }
-        .cfee-section, .pnl-section, .manhour-section, .revenue-section { margin-bottom: 20px; }
-        .cfee-section h2, .cfee-section h3, .manhour-section h2, .revenue-section h2 {
+        .cfee-section, .pnl-section, .manhour-section, .revenue-section, .forecast-section { margin-bottom: 20px; }
+        .cfee-section h2, .cfee-section h3, .manhour-section h2, .revenue-section h2, .forecast-section h2 {
             margin: 0 0 0px 0;
             font-weight: 600;
             color: #34495e;
@@ -106,29 +105,29 @@
             font-weight: 600;
             color: #34495e;
         }
-        .cfee-section h2, .pnl-section h2, .manhour-section h2, .revenue-section h2 {
+        .cfee-section h2, .pnl-section h2, .manhour-section h2, .revenue-section h2, .forecast-section h2 {
             font-size: 18px;
             border-bottom: 2px solid #3498db;
             padding-bottom: 5px;
         }
         .cfee-section h3 { font-size: 16px; }
-        .cfee-table, .pnl-table, .manhour-table {
+        .cfee-table, .pnl-table, .manhour-table, .forecast-table {
             width: 100%;
             border-collapse: separate;
             border-spacing: 0;
             margin-top: 10px;
         }
-        .cfee-table th, .cfee-table td, .pnl-table th, .pnl-table td, .manhour-table th, .manhour-table td {
+        .cfee-table th, .cfee-table td, .pnl-table th, .pnl-table td, .manhour-table th, .manhour-table td, .forecast-table th, .forecast-table td {
             padding: 10px;
             text-align: left;
             border-bottom: 1px solid #e0e0e0;
         }
-        .cfee-table th, .pnl-table th, .manhour-table th {
+        .cfee-table th, .pnl-table th, .manhour-table th, .forecast-table th {
             background-color: #f8f9fa;
             font-weight: 600;
             color: #2c3e50;
         }
-        .cfee-table td, .pnl-table td, .manhour-table td {
+        .cfee-table td, .pnl-table td, .manhour-table td, .forecast-table td {
             background-color: #ffffff;
             text-align: right;
         }
@@ -145,7 +144,7 @@
             border-radius: 5px;
             font-size: 14px;
         }
-        .cfee-actions, .pnl-actions, .manhour-actions {
+        .cfee-actions, .pnl-actions, .manhour-actions, .forecast-actions {
             display: flex;
             justify-content: center;
             gap: 10px;
@@ -298,9 +297,9 @@
             .button-group button {
                 width: 200px;
             }
-            .cfee-section h2, .pnl-section h2, .manhour-section h2, .revenue-section h2 { font-size: 24px; }
+            .cfee-section h2, .pnl-section h2, .manhour-section h2, .revenue-section h2, .forecast-section h2 { font-size: 24px; }
             .cfee-section h3 { font-size: 20px; }
-            .cfee-table th, .cfee-table td, .pnl-table th, .pnl-table td, .manhour-table th, .manhour-table td {
+            .cfee-table th, .cfee-table td, .pnl-table th, .pnl-table td, .manhour-table th, .manhour-table td, .forecast-table th, .forecast-table td {
                 padding: 15px;
                 font-size: 20px;
             }
@@ -315,8 +314,8 @@
                 font-size: 20px;
                 border-radius: 8px;
             }
-            .cfee-actions, .pnl-actions, .manhour-actions { gap: 15px; margin-bottom: 30px; }
-            .cfee-actions button, .pnl-actions button, .manhour-actions button {
+            .cfee-actions, .pnl-actions, .manhour-actions, .forecast-actions { gap: 15px; margin-bottom: 30px; }
+            .cfee-actions button, .pnl-actions button, .manhour-actions button, .forecast-actions button {
                 padding: 12px 25px;
                 font-size: 16px;
                 border-radius: 6px;
@@ -335,21 +334,22 @@
             }
         }
         @media print {
-            .main-actions, .cfee-actions, .pnl-actions, .manhour-actions, .back-btn, .add-account-btn, .remove-account-btn, .year-selector, .year-buttons { display: none !important; }
-            #cfee-content:not(.hidden) ~ #pnl-content, #cfee-content:not(.hidden) ~ #manhour-content, #cfee-content:not.hidden> #revenue-content { display: none !important; }
-            #pnl-content:not(.hidden) ~ #cfee-content, #pnl-content:not(.hidden) ~ #manhour-content, #pnl-content:not(.hidden) ~ #revenue-content { display: none !important; }
-            #manhour-content:not(.hidden) ~ #cfee-content, #manhour-content:not(.hidden) ~ #pnl-content, #manhour-content:not(.hidden) ~ #revenue-content { display: none !important; }
-            #revenue-content:not(.hidden) ~ #cfee-content, #revenue-content:not(.hidden) ~ #pnl-content, #revenue-content:not(.hidden) ~ #manhour-content { display: none !important; }
+            .main-actions, .cfee-actions, .pnl-actions, .manhour-actions, .forecast-actions, .back-btn, .add-account-btn, .remove-account-btn, .year-selector, .year-buttons { display: none !important; }
+            #cfee-content:not(.hidden) ~ #pnl-content, #cfee-content:not(.hidden) ~ #manhour-content, #cfee-content:not(.hidden) ~ #revenue-content, #cfee-content:not(.hidden) ~ #forecast-content { display: none !important; }
+            #pnl-content:not(.hidden) ~ #cfee-content, #pnl-content:not(.hidden) ~ #manhour-content, #pnl-content:not(.hidden) ~ #revenue-content, #pnl-content:not(.hidden) ~ #forecast-content { display: none !important; }
+            #manhour-content:not(.hidden) ~ #cfee-content, #manhour-content:not(.hidden) ~ #pnl-content, #manhour-content:not(.hidden) ~ #revenue-content, #manhour-content:not(.hidden) ~ #forecast-content { display: none !important; }
+            #revenue-content:not(.hidden) ~ #cfee-content, #revenue-content:not(.hidden) ~ #pnl-content, #revenue-content:not(.hidden) ~ #manhour-content, #revenue-content:not(.hidden) ~ #forecast-content { display: none !important; }
+            #forecast-content:not(.hidden) ~ #cfee-content, #forecast-content:not(.hidden) ~ #pnl-content, #forecast-content:not(.hidden) ~ #manhour-content, #forecast-content:not(.hidden) ~ #revenue-content { display: none !important; }
             .container { width: 100%; max-width: 680px; padding: 15px; margin: 0 auto; box-shadow: none; border-radius: 0; }
             header { border-bottom: 2px solid #e0e0e0; padding-bottom: 8px; margin-bottom: 5px; }
             .logo img { max-width: 160px; }
             h1 { font-size: 22px; }
             .main-actions h2 { font-size: 20px; }
-            .cfee-section h2, .cfee-section h3, .pnl-section h2, .manhour-section h2, .revenue-section h2 { font-size: 16px; margin: 0 0 8px 0; }
-            .cfee-section h2, .pnl-section h2, .manhour-section h2, .revenue-section h2 { padding-bottom: 4px; }
-            .cfee-section, .pnl-section, .manhour-section, .revenue-section { margin-bottom: 15px; }
-            .cfee-table, .pnl-table, .manhour-table { margin-top: 8px; }
-            .cfee-table th, .cfee-table td, .pnl-table th, .pnl-table td, .manhour-table th, .manhour-table td { padding: 8px; font-size: 12px; }
+            .cfee-section h2, .cfee-section h3, .pnl-section h2, .manhour-section h2, .revenue-section h2, .forecast-section h2 { font-size: 16px; margin: 0 0 8px 0; }
+            .cfee-section h2, .pnl-section h2, .manhour-section h2, .revenue-section h2, .forecast-section h2 { padding-bottom: 4px; }
+            .cfee-section, .pnl-section, .manhour-section, .revenue-section, .forecast-section { margin-bottom: 15px; }
+            .cfee-table, .pnl-table, .manhour-table, .forecast-table { margin-top: 8px; }
+            .cfee-table th, .cfee-table td, .pnl-table th, .pnl-table td, .manhour-table th, .manhour-table td, .forecast-table th, .forecast-table td { padding: 8px; font-size: 12px; }
             input[type="text"], input[type="number"] {
                 padding: 6px;
                 margin: 2px 0;
@@ -380,7 +380,7 @@
             <div class="logo">
                 <img src="https://cdn-ilafcfb.nitrocdn.com/KEhcwwSaSxLtwUeasrlkkKIKKhAgEOob/assets/images/optimized/rev-16fc74f/anagocleaning.com/wp-content/uploads/2023/09/anagologo2-300x181.png" alt="Anago Cleaning Systems Logo">
             </div>
-            <h1>Anago Philly Finance Tools</h1>
+            <h1>Anago Philly & South Jersey Finance Tools</h1>
         </header>
 
         <section class="main-actions" id="main-actions">
@@ -390,6 +390,7 @@
                 <button id="cfee-btn">C-Fee Calculator</button>
                 <button id="pnl-btn">P&L Statement</button>
                 <button id="revenue-btn">Revenue Analysis</button>
+                <button id="forecast-btn">Account Forecast</button>
             </div>
         </section>
 
@@ -449,7 +450,7 @@
                 <section class="pnl-section">
                     <h2>Profit & Loss Statement</h2>
                     <div id="accounts-container">
-                        <button class="accordion">Account 1</button>
+                        <button class="accordion"><span class="accordion-title">Account 1</span></button>
                         <div class="panel">
                             <input type="text" class="account-name-input" value="Account 1">
                             <form class="pnl-form">
@@ -490,8 +491,9 @@
                         <tr><th>Cfees</th><td id="pnl-cfees-costs">$0.00</td></tr>
                         <tr><th>Cost of Doing Business</th><td id="pnl-codb-costs">$0.00</td></tr>
                         <tr><th>Total Expenses</th><td id="pnl-total-expenses">$0.00</td></tr>
-                        <tr class="highlight"><th>Net Profit (With CFees)</th><td id="pnl-net-profit">$0.00</td></tr>
-                        <tr class="highlight"><th>Net Profit (Without CFees)</th><td id="pnl-net-without-cfees">$0.00</td></tr>
+                        <tr class="highlight"><th>Net Profit Monthly (With CFees)</th><td id="pnl-net-profit">$0.00</td></tr>
+                        <tr class="highlight"><th>Net Profit Monthly (Without CFees)</th><td id="pnl-net-without-cfees">$0.00</td></tr>
+                        <tr class="highlight"><th>Net Profit Annual</th><td id="pnl-net-annual">$0.00</td></tr>
                     </table>
                 </section>
                 <button id="pnl-back-btn" class="back-btn">Back</button>
@@ -549,6 +551,55 @@
                 </section>
                 <button id="revenue-back-btn" class="back-btn">Back</button>
             </div>
+
+            <div id="forecast-content" class="hidden">
+                <section class="forecast-section">
+                    <h2>Account Forecast</h2>
+                    <form>
+                        <label for="forecast-account-name">Account Name:</label>
+                        <input type="text" id="forecast-account-name" name="forecast-account-name" value=" ">
+                        <div class="cfee-input-group">
+                            <div>
+                                <label for="forecast-account-revenue">Account Revenue:</label>
+                                <input type="text" id="forecast-account-revenue" name="forecast-account-revenue" value="0.00">
+                            </div>
+                            <div>
+                                <label for="forecast-payroll-percentage">Estimated Payroll (%):</label>
+                                <input type="number" id="forecast-payroll-percentage" name="forecast-payroll-percentage" value="25" step="0.1">
+                            </div>
+                            <div>
+                                <label for="forecast-man-hours">Man Hours (Per Visit):</label>
+                                <input type="number" id="forecast-man-hours" name="forecast-man-hours" value="0.0" step="0.1">
+                            </div>
+                            <div>
+                                <label for="forecast-times-per-week">Times Per Week:</label>
+                                <input type="number" id="forecast-times-per-week" name="forecast-times-per-week" value="1" step="1" min="1">
+                            </div>
+                            <div>
+                                <label for="forecast-cfee-factor">CFee Factor:</label>
+                                <input type="number" id="forecast-cfee-factor" name="forecast-cfee-factor" value="0.0" step="0.1">
+                            </div>
+                        </div>
+                    </form>
+                </section>
+                <section class="forecast-actions">
+                    <button id="forecast-calculate-btn">Calculate</button>
+                    <button id="forecast-print-btn">Print</button>
+                    <button id="forecast-download-btn">Download</button>
+                </section>
+                <section class="forecast-section">
+                    <table class="forecast-table">
+                        <tr><th>Cost of Doing Business (25%)</th><td id="forecast-codb">$0.00</td></tr>
+                        <tr><th>CFee Monthly Amount</th><td id="forecast-cfee-monthly">$0.00</td></tr>
+                        <tr><th>Estimated Supplies (5%)</th><td id="forecast-supplies">$0.00</td></tr>
+                        <tr><th>Estimated Payroll</th><td id="forecast-play">$0.00</td></tr>
+                        <tr><th>Average Hourly Rate</th><td id="forecast-avg-hourly-rate">$0.00</td></tr>
+                        <tr class="highlight"><th>Net with CFees</th><td id="forecast-net-with-cfees">$0.00</td></tr>
+                        <tr class="highlight"><th>Net without CFees</th><td id="forecast-net-without-cfees">$0.00</td></tr>
+                    </table>
+                </section>
+                <button id="forecast-back-btn" class="back-btn">Back</button>
+            </div>
         </div>
     </div>
 
@@ -561,14 +612,17 @@
             const pnlBtn = document.getElementById('pnl-btn');
             const manhourBtn = document.getElementById('manhour-btn');
             const revenueBtn = document.getElementById('revenue-btn');
+            const forecastBtn = document.getElementById('forecast-btn');
             const cfeeContent = document.getElementById('cfee-content');
             const pnlContent = document.getElementById('pnl-content');
             const manhourContent = document.getElementById('manhour-content');
             const revenueContent = document.getElementById('revenue-content');
+            const forecastContent = document.getElementById('forecast-content');
             const cfeeBackBtn = document.getElementById('cfee-back-btn');
             const pnlBackBtn = document.getElementById('pnl-back-btn');
             const manhourBackBtn = document.getElementById('manhour-back-btn');
             const revenueBackBtn = document.getElementById('revenue-back-btn');
+            const forecastBackBtn = document.getElementById('forecast-back-btn');
 
             const calculateBtn = document.getElementById('calculate-btn');
             const printBtn = document.getElementById('print-btn');
@@ -593,10 +647,12 @@
             pnlBtn.addEventListener('click', () => toggleSection(pnlContent));
             manhourBtn.addEventListener('click', () => toggleSection(manhourContent));
             revenueBtn.addEventListener('click', () => toggleSection(revenueContent));
+            forecastBtn.addEventListener('click', () => toggleSection(forecastContent));
             cfeeBackBtn.addEventListener('click', () => toggleSection(mainActions));
             pnlBackBtn.addEventListener('click', () => toggleSection(mainActions));
             manhourBackBtn.addEventListener('click', () => toggleSection(mainActions));
             revenueBackBtn.addEventListener('click', () => toggleSection(mainActions));
+            forecastBackBtn.addEventListener('click', () => toggleSection(mainActions));
 
             function toggleSection(activeSection) {
                 mainActions.classList.toggle('hidden', activeSection !== mainActions);
@@ -604,6 +660,7 @@
                 pnlContent.classList.toggle('hidden', activeSection !== pnlContent);
                 manhourContent.classList.toggle('hidden', activeSection !== manhourContent);
                 revenueContent.classList.toggle('hidden', activeSection !== revenueContent);
+                forecastContent.classList.toggle('hidden', activeSection !== forecastContent);
             }
 
             let accCount = 1;
@@ -619,7 +676,7 @@
             }
 
             function formatNumberInputs(container) {
-                const numberInputs = container.querySelectorAll('.number-input');
+                const numberInputs = container.querySelectorAll('input[type="text"]');
                 numberInputs.forEach(input => {
                     input.addEventListener('blur', () => {
                         const value = parseFloat(input.value.replace(/,/g, '')) || 0;
@@ -631,6 +688,12 @@
             // P&L Setup
             document.querySelectorAll('#accounts-container .accordion').forEach(acc => {
                 acc.addEventListener('click', toggleAccordion);
+                const panel = acc.nextElementSibling;
+                const nameInput = panel.querySelector('.account-name-input');
+                nameInput.addEventListener('input', function() {
+                    const title = acc.querySelector('.accordion-title') || acc;
+                    title.textContent = this.value || `Account 1`;
+                });
             });
 
             document.getElementById('add-account-btn').addEventListener('click', () => {
@@ -781,7 +844,7 @@
                 window.open(`analysis-report.html?data=${encodedData}`, '_blank');
             });
 
-            // Import Excel functionality (unchanged)
+            // Import Excel functionality
             importBtn.addEventListener('click', () => {
                 importExcelInput.click();
             });
@@ -854,7 +917,7 @@
                 }
             });
 
-            // Paste Profit functionality (unchanged)
+            // Paste Profit functionality
             pasteProfitBtn.addEventListener('click', () => {
                 if (pasteDataInput.style.display === 'none' || pasteDataInput.style.display === '') {
                     pasteDataInput.style.display = 'block';
@@ -983,7 +1046,6 @@
                     }
                 });
 
-                // Update revenueData with aggregated CFees
                 Object.keys(monthsMap).forEach(key => {
                     revenueData[key] = {
                         profit: revenueData[key]?.profit || 0,
@@ -1004,7 +1066,7 @@
                 }
             }
 
-            // Initialize with default range (updated to cover your data range)
+            // Initialize with default range
             generateYearButtons(2020, 2025);
 
             // C-Fee Calculator
@@ -1084,6 +1146,7 @@
                 const totalExpenses = totalLabor + totalSupplies + totalOverhead + totalCfees + totalCodbCost;
                 const netProfit = totalRevenue - totalExpenses;
                 const netWithoutCfees = netProfit + totalCfees;
+                const netAnnual = netWithoutCfees * 12;
 
                 document.getElementById('pnl-total-revenue').textContent = `$${totalRevenue.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
                 document.getElementById('pnl-labor-costs').textContent = `$${totalLabor.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
@@ -1094,6 +1157,7 @@
                 document.getElementById('pnl-total-expenses').textContent = `$${totalExpenses.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
                 document.getElementById('pnl-net-profit').textContent = `$${netProfit.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
                 document.getElementById('pnl-net-without-cfees').textContent = `$${netWithoutCfees.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+                document.getElementById('pnl-net-annual').textContent = `$${netAnnual.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
             });
 
             document.getElementById('pnl-print-btn').addEventListener('click', () => window.print());
@@ -1115,6 +1179,78 @@
                 const totalManHours = numberOfPeople * totalHours;
                 document.getElementById('total-man-hours').textContent = totalManHours.toFixed(1);
             });
+
+            // Account Forecast Calculator
+            document.getElementById('forecast-calculate-btn').addEventListener('click', () => {
+                const accountRevenue = parseFloat(document.getElementById('forecast-account-revenue').value.replace(/,/g, '')) || 0;
+                const payrollPercentage = parseFloat(document.getElementById('forecast-payroll-percentage').value) || 25;
+                const manHoursPerVisit = parseFloat(document.getElementById('forecast-man-hours').value) || 0;
+                const timesPerWeek = parseFloat(document.getElementById('forecast-times-per-week').value) || 1;
+                const cfeeFactor = parseFloat(document.getElementById('forecast-cfee-factor').value) || 0;
+
+                // Calculate monthly man hours (assuming 4 weeks per month)
+                const monthlyManHours = manHoursPerVisit * timesPerWeek * 4;
+
+                // Calculate Cost of Doing Business (25% of revenue)
+                const codb = accountRevenue * 0.25;
+
+                // Calculate CFee Monthly Amount ((revenue × cfee factor + 12%) / 12)
+                const cfeeBase = accountRevenue * cfeeFactor;
+                const cfeeWithInterest = cfeeBase * 1.12; // Adding 12% interest
+                const cfeeMonthly = cfeeWithInterest / 12;
+
+                // Calculate Estimated Supplies (5% of revenue)
+                const supplies = accountRevenue * 0.05;
+
+                // Calculate Payroll based on user input percentage
+                const payroll = accountRevenue * (payrollPercentage / 100);
+                const adjustedHourlyRate = monthlyManHours > 0 ? payroll / monthlyManHours : 0;
+
+                // Calculate net with and without CFees
+                const totalExpensesWithCfees = codb + cfeeMonthly + supplies + payroll;
+                const netWithCfees = accountRevenue - totalExpensesWithCfees;
+                const totalExpensesWithoutCfees = codb + supplies + payroll;
+                const netWithoutCfees = accountRevenue - totalExpensesWithoutCfees;
+
+                // Update display
+                document.getElementById('forecast-codb').textContent = `$${codb.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+                document.getElementById('forecast-cfee-monthly').textContent = `$${cfeeMonthly.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+                document.getElementById('forecast-supplies').textContent = `$${supplies.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+                document.getElementById('forecast-payroll').textContent = `$${payroll.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} (${payrollPercentage}%)`;
+                document.getElementById('forecast-avg-hourly-rate').textContent = `$${adjustedHourlyRate.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+                document.getElementById('forecast-net-with-cfees').textContent = `$${netWithCfees.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+                document.getElementById('forecast-net-without-cfees').textContent = `$${netWithoutCfees.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+            });
+
+            document.getElementById('forecast-print-btn').addEventListener('click', () => window.print());
+            document.getElementById('forecast-download-btn').addEventListener('click', async () => {
+                const forecastActions = document.querySelector('.forecast-actions');
+                forecastActions.style.display = 'none';
+                forecastBackBtn.style.display = 'none';
+                const canvas = await html2canvas(forecastContent, { backgroundColor: '#ffffff', scale: 2, useCORS: true, scrollY: 0, scrollX: 0 });
+                forecastActions.style.display = 'flex';
+                forecastBackBtn.style.display = 'block';
+                const pdf = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+                const pageWidth = 210;
+                const pageHeight = 297;
+                const imgWidth = pageWidth - 20;
+                const imgHeight = (canvas.height * imgWidth) / canvas.width;
+                let heightLeft = imgHeight;
+                let position = 0;
+                const imgData = canvas.toDataURL('image/png');
+                pdf.addImage(imgData, 'PNG', 10, position, imgWidth, imgHeight);
+                heightLeft -= pageHeight;
+                while (heightLeft > 0) {
+                    position = -(pageHeight - (heightLeft > pageHeight ? pageHeight : heightLeft));
+                    pdf.addPage();
+                    pdf.addImage(imgData, 'PNG', 10, position, imgWidth, heightLeft > pageHeight ? pageHeight : heightLeft);
+                    heightLeft -= pageHeight;
+                }
+                pdf.save('Account_Forecast.pdf');
+            });
+
+            // Format forecast inputs
+            formatNumberInputs(forecastContent);
         });
     </script>
 </body>
