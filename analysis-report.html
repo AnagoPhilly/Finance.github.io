@@ -90,12 +90,9 @@
             border-radius: 16px;
             box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
             border: 1px solid #e9ecef;
-            position: relative;
-        }
-        .chart-content {
             transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
-        .chart-content:hover {
+        .chart-container:hover {
             transform: translateY(-3px);
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
         }
@@ -120,7 +117,6 @@
             gap: 12px;
             flex-direction: column;
             align-items: flex-end;
-            z-index: 1; /* Ensure buttons stay above chart content */
         }
         .toggle-button {
             padding: 10px 20px;
@@ -273,7 +269,6 @@
                 box-shadow: none;
                 border-radius: 0;
                 border: none;
-                width: 100%; /* Ensure full width */
             }
             .chart-container h2 {
                 font-size: 16px;
@@ -314,11 +309,8 @@
                 display: none;
             }
             canvas#trendChart {
-                width: 100% !important; /* Full width of container */
-                height: auto !important; /* Let height adjust naturally */
-                max-width: none; /* Remove any max-width constraints */
-                margin: 0; /* Remove any default margins */
-                padding: 0; /* Remove padding to maximize space */
+                width: 100% !important;
+                height: 400px !important;
             }
         }
     </style>
@@ -361,9 +353,7 @@
                 </div>
                 <div class="chart-container">
                     <h2>Trends Over Time</h2>
-                    <div class="chart-content">
-                        <canvas id="trendChart"></canvas>
-                    </div>
+                    <canvas id="trendChart"></canvas>
                     <div class="toggle-buttons">
                         <button class="toggle-button mean" id="toggleMean">Show Mean</button>
                         <button class="toggle-button trend" id="toggleTrend">Show Trend</button>
@@ -374,15 +364,11 @@
             <div class="yearly-pie-container">
                 <div class="chart-container">
                     <h2>Yearly Totals</h2>
-                    <div class="chart-content">
-                        <canvas id="yearlyChangeChart"></canvas>
-                    </div>
+                    <canvas id="yearlyChangeChart"></canvas>
                 </div>
                 <div class="chart-container">
                     <h2>Total Distribution</h2>
-                    <div class="chart-content">
-                        <canvas id="pieChart"></canvas>
-                    </div>
+                    <canvas id="pieChart"></canvas>
                 </div>
             </div>
         </div>
@@ -412,7 +398,7 @@
             cfees: '#007bff',
             meanProfit: '#2a9444',
             meanLabor: '#cc7700',
-            meanCFees: '#0056 CONTRIBUTINGd2',
+            meanCFees: '#0056d2',
             trendProfit: '#1e7e34',
             trendLabor: '#995900',
             trendCFees: '#004085'
