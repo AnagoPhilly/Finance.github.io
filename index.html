@@ -390,7 +390,7 @@
                 <button id="cfee-btn">C-Fee Calculator</button>
                 <button id="pnl-btn">P&L Statement</button>
                 <button id="revenue-btn">Revenue Analysis</button>
-                <button id="forecast-btn">Account Forecast</button>
+                <!-- <button id="forecast-btn">Account Forecast</button> -->
             </div>
         </section>
 
@@ -592,7 +592,7 @@
                         <tr><th>Cost of Doing Business (25%)</th><td id="forecast-codb">$0.00</td></tr>
                         <tr><th>CFee Monthly Amount</th><td id="forecast-cfee-monthly">$0.00</td></tr>
                         <tr><th>Estimated Supplies (5%)</th><td id="forecast-supplies">$0.00</td></tr>
-                        <tr><th>Estimated Payroll</th><td id="forecast-play">$0.00</td></tr>
+                        <tr><th>Estimated Payroll</th><td id="forecast-payroll">$0.00</td></tr>
                         <tr><th>Average Hourly Rate</th><td id="forecast-avg-hourly-rate">$0.00</td></tr>
                         <tr class="highlight"><th>Net with CFees</th><td id="forecast-net-with-cfees">$0.00</td></tr>
                         <tr class="highlight"><th>Net without CFees</th><td id="forecast-net-without-cfees">$0.00</td></tr>
@@ -612,7 +612,7 @@
             const pnlBtn = document.getElementById('pnl-btn');
             const manhourBtn = document.getElementById('manhour-btn');
             const revenueBtn = document.getElementById('revenue-btn');
-            const forecastBtn = document.getElementById('forecast-btn');
+            const forecastBtn = document.getElementById('forecast-btn'); // May be null
             const cfeeContent = document.getElementById('cfee-content');
             const pnlContent = document.getElementById('pnl-content');
             const manhourContent = document.getElementById('manhour-content');
@@ -647,7 +647,9 @@
             pnlBtn.addEventListener('click', () => toggleSection(pnlContent));
             manhourBtn.addEventListener('click', () => toggleSection(manhourContent));
             revenueBtn.addEventListener('click', () => toggleSection(revenueContent));
-            forecastBtn.addEventListener('click', () => toggleSection(forecastContent));
+            if (forecastBtn) { // Only attach if forecastBtn exists
+                forecastBtn.addEventListener('click', () => toggleSection(forecastContent));
+            }
             cfeeBackBtn.addEventListener('click', () => toggleSection(mainActions));
             pnlBackBtn.addEventListener('click', () => toggleSection(mainActions));
             manhourBackBtn.addEventListener('click', () => toggleSection(mainActions));
@@ -676,7 +678,8 @@
             }
 
             function formatNumberInputs(container) {
-                const numberInputs = container.querySelectorAll('input[type="text"]');
+                // Select only text inputs with class 'number-input' to exclude account-name-input
+                const numberInputs = container.querySelectorAll('input[type="text"].number-input');
                 numberInputs.forEach(input => {
                     input.addEventListener('blur', () => {
                         const value = parseFloat(input.value.replace(/,/g, '')) || 0;
@@ -691,8 +694,8 @@
                 const panel = acc.nextElementSibling;
                 const nameInput = panel.querySelector('.account-name-input');
                 nameInput.addEventListener('input', function() {
-                    const title = acc.querySelector('.accordion-title') || acc;
-                    title.textContent = this.value || `Account 1`;
+                    const title = acc.querySelector('.accordion-title');
+                    title.textContent = this.value || `Account ${accCount}`;
                 });
             });
 
